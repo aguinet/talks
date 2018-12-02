@@ -1,0 +1,158 @@
+\documentclass[10pt, svgnames, beamer, aspectratio=169]{beamer}
+
+
+\usetheme{Darmstadt}
+\setbeamertemplate{headline}{}
+\usepackage{fontawesome}
+\def\twitter{{\FA \faTwitter}}
+\def\github{{\FA \faGithub}}
+\def\mail{{\FA \faEnvelope}}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{aeguill}
+\usepackage{ucs}
+\usepackage{listings}
+\usepackage{alltt}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{url}
+\usepackage{wasysym}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{paracol}
+\urlstyle{sf}
+\usepackage{eurosym}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{calc,intersections, positioning, automata, decorations.pathreplacing, calc}
+\tikzstyle{every picture}+=[remember picture]
+\usepackage{amsmath, amsfonts, wasysym}
+\usepackage[scaled=0.9]{beramono}
+
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\footnotesize{#3}}
+\captionsetup[lstlisting]{format=listing}
+
+
+\beamertemplatenavigationsymbolsempty
+
+%\newcommand{\qb}{\textcolor{qbred}{QUARKS}\textcolor{qbgrey}{LAB}} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Code Listings %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newcommand{\simdfourvectorclimpl}[8]{
+    \def\N{4}
+	\pgfmathparse{\L/2}
+	\let\XA\pgfmathresult
+	\pgfmathparse{\L/2 + \L}
+	\let\XB\pgfmathresult
+	\pgfmathparse{\L/2 + 2*\L}
+	\let\XC\pgfmathresult
+	\pgfmathparse{\L/2 + 3*\L}
+	\let\XD\pgfmathresult
+    \tikz[baseline=-0.5ex]{
+		\draw[fill=#1] (\L*3 em,-.6em) node {\pgfmathparse{int(\B*\N - \B*3 -1)}\pgfmathresult} (\L*1 em,0) rectangle (\L*4 em,1em) (\XD em, .5em) node{\small{#2}} ;
+		\draw[fill=#3] (\L*2 em,-.6em) node {\pgfmathparse{int(\B*\N - \B*2 -1)}\pgfmathresult} (\L*0 em,0) rectangle (\L*3 em,1em) (\XC em, .5em) node{\small{#4}} ;
+		\draw[fill=#5] (\L*1 em,-.6em) node {\pgfmathparse{int(\B*\N - \B*1 -1)}\pgfmathresult} (\L*1 em,0) rectangle (\L*2 em,1em) (\XB em, .5em) node{\small{#6}} ;
+		\draw[fill=#7] (\L*0 em,-.6em) node {\pgfmathparse{int(\B*\N - \B*0 -1)}\pgfmathresult} (\L*0 em,0) rectangle (\L*1 em,1em) (\XA em, .5em) node{\small{#8}} ;
+        \draw (\L*4 em,-.6em) node {0};
+    }
+}
+
+\newcommand{\simdfourvectorcl}[2][32]{
+	\def\B{#1}
+	\def\L{#2}
+	\simdfourvectorclimpl
+}
+
+\newcommand{\simdfourvectorc}[9][32]{
+	\simdfourvectorcl[#1]{2}{#2}{#3}{#4}{#5}{#6}{#7}{#8}{#9}
+}
+
+\newcommand{\simdfourvector}[5][32]{
+    \simdfourvectorc[#1]{none}{#2}{none}{#3}{none}{#4}{none}{#5}
+}
+
+\definecolor{simdc1}{HTML}{39D456}
+\definecolor{simdc2}{HTML}{236Cc6}
+\colorlet{simdc3}{orange}
+\colorlet{simdc4}{yellow}
+
+\definecolor{lstrule}{HTML}{7985E4}
+
+\lstset{
+    inputencoding=utf8,
+    tabsize=2,
+    rulecolor=,
+    upquote=true,
+    columns=fixed,
+    showstringspaces=false,
+    extendedchars=true,
+    breaklines=true,
+    prebreak = \raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+    %frame=single,
+    showtabs=false,
+    showspaces=false,
+    showstringspaces=false,
+    basicstyle=\scriptsize\ttfamily,
+    identifierstyle=\scriptsize\ttfamily,
+    keywordstyle=\ttfamily\color[rgb]{0,0,1},
+    commentstyle=\ttfamily\color[rgb]{0.133,0.545,0.133},
+    stringstyle=\ttfamily\color[rgb]{0.627,0.126,0.941},
+    escapeinside={{@@}{@}},
+    rulecolor=\color{lstrule},
+    framerule=2pt
+}
+\makeatletter
+
+\lstdefinelanguage{llvm}{
+  morecomment = [l]{;},
+  morestring=[b]", 
+  sensitive = true,
+  classoffset=0,
+  morekeywords={
+    define, declare, global, constant,
+    internal, external, private,
+    linkonce, linkonce_odr, weak, weak_odr, appending,
+    common, extern_weak,
+    thread_local, dllimport, dllexport,
+    hidden, protected, default,
+    except, deplibs,
+    volatile, fastcc, coldcc, cc, ccc,
+    x86_stdcallcc, x86_fastcallcc,
+    ptx_kernel, ptx_device,
+    signext, zeroext, inreg, sret, nounwind, noreturn,
+    nocapture, byval, nest, readnone, readonly, noalias, uwtable,
+    inlinehint, noinline, alwaysinline, optsize, ssp, sspreq,
+    noredzone, noimplicitfloat, naked, alignstack,
+    module, asm, align, tail, to,
+    addrspace, section, alias, sideeffect, c, gc,
+    target, datalayout, triple,
+    blockaddress
+  },
+  classoffset=1, keywordstyle=\color{purple},
+  morekeywords={
+    fadd, sub, fsub, mul, fmul, add,
+    sdiv, udiv, fdiv, srem, urem, frem,
+    and, or, xor,
+    icmp, fcmp,
+    eq, ne, ugt, uge, ult, ule, sgt, sge, slt, sle,
+    oeq, ogt, oge, olt, ole, one, ord, ueq, ugt, uge,
+    ult, ule, une, uno,
+    nuw, nsw, exact, inbounds,
+    phi, call, select, shl, lshr, ashr, va_arg,
+    trunc, zext, sext,
+    fptrunc, fpext, fptoui, fptosi, uitofp, sitofp,
+    ptrtoint, inttoptr, bitcast,
+    ret, br, indirectbr, switch, invoke, unwind, unreachable,
+    malloc, alloca, free, load, store, getelementptr,
+    extractelement, insertelement, shufflevector,
+    extractvalue, insertvalue,
+  },
+  alsoletter={\%},
+  keywordsprefix={\%},
+}
